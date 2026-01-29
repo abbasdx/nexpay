@@ -1,11 +1,11 @@
-package com.paypal.user_service.controller;
+package com.nexpay.userservice.controller;
 
-import com.paypal.user_service.dto.JwtResponse;
-import com.paypal.user_service.dto.LoginRequest;
-import com.paypal.user_service.dto.SignupRequest;
-import com.paypal.user_service.entity.User;
-import com.paypal.user_service.repository.UserRepository;
-import com.paypal.user_service.utils.JWTUtil;
+import com.nexpay.userservice.dto.JwtResponse;
+import com.nexpay.userservice.dto.LoginRequest;
+import com.nexpay.userservice.dto.SignupRequest;
+import com.nexpay.userservice.entity.User;
+import com.nexpay.userservice.repository.UserRepository;
+import com.nexpay.userservice.utils.JWTUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;

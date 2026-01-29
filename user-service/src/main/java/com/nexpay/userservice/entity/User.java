@@ -1,4 +1,4 @@
-package com.paypal.user_service.entity;
+package com.nexpay.userservice.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

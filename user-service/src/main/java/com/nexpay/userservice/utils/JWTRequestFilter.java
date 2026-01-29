@@ -1,4 +1,4 @@
-package com.paypal.user_service.utils;
+package com.nexpay.userservice.utils;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

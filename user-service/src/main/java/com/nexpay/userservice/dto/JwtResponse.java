@@ -1,4 +1,4 @@
-package com.paypal.user_service.dto;
+package com.nexpay.userservice.dto;
 
 
 public class JwtResponse {

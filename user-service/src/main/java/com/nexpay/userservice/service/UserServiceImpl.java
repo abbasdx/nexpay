@@ -1,7 +1,7 @@
-package com.paypal.user_service.service;
+package com.nexpay.userservice.service;
 
-import com.paypal.user_service.entity.User;
-import com.paypal.user_service.repository.UserRepository;
+import com.nexpay.userservice.entity.User;
+import com.nexpay.userservice.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

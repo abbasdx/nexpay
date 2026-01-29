@@ -1,4 +1,4 @@
-package com.paypal.user_service;
+package com.nexpay.userservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

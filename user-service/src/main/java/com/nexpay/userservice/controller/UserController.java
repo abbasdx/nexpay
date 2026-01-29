@@ -1,7 +1,7 @@
-package com.paypal.user_service.controller;
+package com.nexpay.userservice.controller;
 
-import com.paypal.user_service.entity.User;
-import com.paypal.user_service.service.UserService;
+import com.nexpay.userservice.entity.User;
+import com.nexpay.userservice.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
