@@ -1,6 +1,8 @@
 package com.nexpay.transactionservice.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexpay.transactionservice.entity.Transaction;
+import com.nexpay.transactionservice.kafka.KafkaEventProducer;
 import com.nexpay.transactionservice.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +13,13 @@ import java.util.List;
 public class TransactionServiceImpl implements TransactionService{
 
     private final TransactionRepository transactionRepository;
+    private final ObjectMapper objectMapper;
+    private final KafkaEventProducer kafkaEventProducer;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository) {
+    public TransactionServiceImpl(TransactionRepository transactionRepository, ObjectMapper objectMapper, KafkaEventProducer kafkaEventProducer) {
         this.transactionRepository = transactionRepository;
+        this.objectMapper = objectMapper;
+        this.kafkaEventProducer = kafkaEventProducer;
     }
 
     @Override
@@ -36,6 +42,17 @@ public class TransactionServiceImpl implements TransactionService{
         Transaction saved = transactionRepository.save(transaction);
         System.out.println("Transaction saved successfully: "+saved);
 
+        try{
+            String eventPayload = objectMapper.writeValueAsString(saved);
+            String key = String.valueOf(saved.getId());
+            kafkaEventProducer.sendTransactionEvent(eventPayload, key);
+            System.out.println("✅ Kafka Message sent successfully");
+
+        }catch (Exception e){
+            System.err.println("❌ Failed to sent Kafka event");
+            e.printStackTrace();
+
+        }
         return saved;
     }
 
