@@ -1,6 +1,5 @@
 package com.nexpay.transactionservice.kafka;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nexpay.transactionservice.entity.Transaction;
@@ -17,11 +16,11 @@ public class KafkaEventProducer {
 
     private static final String TOPIC = "txn-initiated";
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, Transaction> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public KafkaEventProducer(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
+    public KafkaEventProducer(KafkaTemplate<String, Transaction> kafkaTemplate, ObjectMapper objectMapper) {
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
         // Register module to handle Java 8 date/time serialization
@@ -29,28 +28,19 @@ public class KafkaEventProducer {
     }
 
     // Send Raw message
-    public void sendTransactionEvent(String key, String message) {
-        System.out.println("📤 Sending to Kafka → Topic: " + TOPIC + ", Key: " + key + ", Message: " + message);
+    public void sendTransactionEvent(String key, Transaction transaction) {
+        System.out.println("📤 Sending to Kafka → Topic: " + TOPIC + ", Key: " + key + ", Message: " + transaction);
 
-        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(TOPIC, key, message);
+        CompletableFuture<SendResult<String, Transaction>> future = kafkaTemplate.send(TOPIC, key, transaction);
 
         future.thenAccept(result -> {
             RecordMetadata metadata = result.getRecordMetadata();
             System.out.println("✅ Kafka message sent successfully! Topic: " + metadata.topic() + ", Partition: " + metadata.partition() + ", Offset: " + metadata.offset());
         }).exceptionally(ex -> {
             System.err.println("❌ Failed to send Kafka message: " + ex.getMessage());
+            ex.printStackTrace();
             return null;
         });
     }
 
-    // Send Transaction object serialized as JSON string
-
-    public void sendTransactionEvent(String key, Transaction transaction) {
-        try {
-            String message = objectMapper.writeValueAsString(transaction);
-            sendTransactionEvent(key, message); // reuse existing method
-        } catch (JsonProcessingException e) {
-            System.err.println("❌ Error serializing transaction: " + e.getMessage());
-        }
-    }
 }
