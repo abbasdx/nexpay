@@ -43,15 +43,17 @@ public class TransactionServiceImpl implements TransactionService{
         System.out.println("Transaction saved successfully: "+saved);
 
         try{
-            String eventPayload = objectMapper.writeValueAsString(saved);
+//            String eventPayload = objectMapper.writeValueAsString(saved);
+//            String key = String.valueOf(saved.getId());
+//            kafkaEventProducer.sendTransactionEvent(eventPayload, key);
+
             String key = String.valueOf(saved.getId());
-            kafkaEventProducer.sendTransactionEvent(eventPayload, key);
+            kafkaEventProducer.sendTransactionEvent(key, saved);
             System.out.println("✅ Kafka Message sent successfully");
 
         }catch (Exception e){
             System.err.println("❌ Failed to sent Kafka event");
             e.printStackTrace();
-
         }
         return saved;
     }
