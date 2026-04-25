@@ -24,6 +24,7 @@ spring:
               uri: http://localhost:8082
               predicates:
                   - Path=/api/transaction/**
+              # Rate Limiter
               filters:
                 - name: RequestRateLimiter
                   args:
@@ -36,6 +37,7 @@ spring:
               uri: http://localhost:8084
               predicates:
                   - Path=/api/rewards/**
+              # Rate Limiter
               filters:
                 - name: RequestRateLimiter
                   args:
@@ -48,6 +50,7 @@ spring:
               uri: http://localhost:8083
               predicates:
                   - Path=/api/notify/**
+              # Rate Limiter
               filters:
                 - name: RequestRateLimiter
                   args:
@@ -55,7 +58,7 @@ spring:
                     redis-rate-limiter.burstCapacity: 20
                     redis-rate-limiter.requestedTokens: 1
 
-#   Rate Limiter
+    # HTTP Request Limits
     httpclient:
       max-initial-line-length: 4096
       max-header-size: 8192
