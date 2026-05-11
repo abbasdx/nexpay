@@ -1,5 +1,7 @@
 package com.nexpay.userservice.service;
 
+import com.nexpay.userservice.client.WalletClient;
+import com.nexpay.userservice.dto.WalletRequest;
 import com.nexpay.userservice.entity.User;
 import com.nexpay.userservice.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -12,11 +14,29 @@ public class UserServiceImpl implements UserService{
 
     private UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository){this.userRepository=userRepository;}
+    private final WalletClient walletClient;
+
+    public UserServiceImpl(UserRepository userRepository, WalletClient walletClient) {
+        this.userRepository=userRepository;
+        this.walletClient = walletClient;
+    }
 
     @Override
     public User createUser(User user) {
-        return (User) userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        try {
+            WalletRequest request = new WalletRequest();
+            request.setUserId(user.getId());
+            request.setCurrency("INR");
+            walletClient.createWallet(request);
+        }catch (Exception e){
+            userRepository.deleteById(user.getId()); // rollback
+            throw new RuntimeException("Wallet could not be created, user rolled back", e);
+
+        }
+
+        return savedUser;
     }
 
     @Override
