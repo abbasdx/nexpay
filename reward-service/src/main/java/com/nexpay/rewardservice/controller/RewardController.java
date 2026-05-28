@@ -2,15 +2,13 @@ package com.nexpay.rewardservice.controller;
 
 import com.nexpay.rewardservice.entity.Reward;
 import com.nexpay.rewardservice.repository.RewardRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/rewards")
+@CrossOrigin(origins = "http://localhost:3000")
 public class RewardController {
 
     private final RewardRepository rewardRepository;
@@ -29,4 +27,9 @@ public class RewardController {
         return rewardRepository.findByUserId(userId);
     }
 
+    @GetMapping("/transaction/{transactionId}")
+    public Reward getRewardByTransactionId(@PathVariable Long transactionId) {
+        return rewardRepository.findByTransactionId(transactionId)
+                .orElseThrow(() -> new RuntimeException("Reward not found for transaction ID: " + transactionId));
+    }
 }
