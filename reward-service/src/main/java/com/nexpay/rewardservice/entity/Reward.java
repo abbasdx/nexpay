@@ -18,7 +18,7 @@ public class Reward {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long UserId;
+    private Long userId;
 
     private Double points;
 
