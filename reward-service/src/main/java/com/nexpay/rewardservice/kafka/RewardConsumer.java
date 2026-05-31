@@ -1,8 +1,5 @@
 package com.nexpay.rewardservice.kafka;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.nexpay.rewardservice.entity.Reward;
 import com.nexpay.rewardservice.entity.Transaction;
 import com.nexpay.rewardservice.repository.RewardRepository;
@@ -16,13 +13,8 @@ public class RewardConsumer {
 
     private final RewardRepository rewardRepository;
 
-    private final ObjectMapper mapper;
-
-    public RewardConsumer(RewardRepository rewardRepository, ObjectMapper mapper) {
+    public RewardConsumer(RewardRepository rewardRepository) {
         this.rewardRepository = rewardRepository;
-        this.mapper = new ObjectMapper();
-        this.mapper.registerModule(new JavaTimeModule());
-        this.mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
     @KafkaListener(topics = "txn-initiated", groupId = "reward-group")
@@ -32,7 +24,8 @@ public class RewardConsumer {
 
         try{
             if(rewardRepository.existsByTransactionId(transaction.getId())){
-                System.out.println("Reward already exists for Transaction ID: " + transaction.getId());                return;
+                System.out.println("Reward already exists for Transaction ID: " + transaction.getId());                
+                return;
             }
             Reward reward = new Reward();
             reward.setUserId(transaction.getSenderId());
