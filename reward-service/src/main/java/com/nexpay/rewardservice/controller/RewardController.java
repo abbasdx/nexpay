@@ -8,7 +8,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/rewards")
-@CrossOrigin(origins = "http://localhost:3000")
 public class RewardController {
 
     private final RewardRepository rewardRepository;
